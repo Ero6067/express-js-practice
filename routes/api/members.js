@@ -36,19 +36,22 @@ router.post("/", (req, res) => {
 });
 
 // Update Member
-router.post("/", (req, res) => {
-	const newMember = {
-		id: uuid.v4(),
-		name: req.body.name,
-		profession: req.body.profession
-	};
+router.get("/:id", (req, res) => {
+	const found = members.some(member => member.id === parseInt(req.params.id));
 
-	if (!newMember.name) {
-		return res.status(400).json({ msg: "Please include a name" });
+	if (found) {
+		const updMember = req.body;
+		members.forEach(member => {
+			if (member.id === parseInt(req.params.id)) {
+				member.name = updMember.name ? updMember.name : member.name;
+				member.profession = updMember.profession
+					? updMember.profession
+					: member.profession;
+			}
+		});
+	} else {
+		res.status(400).json({ msg: `No member with the id of ${req.params.id}` });
 	}
-
-	members.push(newMember);
-	res.json(members);
 });
 
 module.exports = router;
