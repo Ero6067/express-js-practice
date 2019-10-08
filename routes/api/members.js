@@ -24,7 +24,7 @@ router.post("/", (req, res) => {
 	const newMember = {
 		id: uuid.v4(),
 		name: req.body.name,
-		profession: req.body.profession
+		occupation: req.body.occupation
 	};
 
 	if (!newMember.name) {
@@ -36,7 +36,7 @@ router.post("/", (req, res) => {
 });
 
 // Update Member
-router.get("/:id", (req, res) => {
+router.put("/:id", (req, res) => {
 	const found = members.some(member => member.id === parseInt(req.params.id));
 
 	if (found) {
@@ -44,9 +44,11 @@ router.get("/:id", (req, res) => {
 		members.forEach(member => {
 			if (member.id === parseInt(req.params.id)) {
 				member.name = updMember.name ? updMember.name : member.name;
-				member.profession = updMember.profession
-					? updMember.profession
-					: member.profession;
+				member.occupation = updMember.occupation
+					? updMember.occupation
+					: member.occupation;
+
+				res.json({ msg: "Member updated", member });
 			}
 		});
 	} else {
